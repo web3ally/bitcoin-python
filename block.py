@@ -1,6 +1,7 @@
 class Block:
 
-    def __init__(self, version, prevBlockHash, merkleRoot, timestamp, transactions, bits, nonce):
+    def __init__(self, blockNumber, version, prevBlockHash, merkleRoot, timestamp, transactions, bits, nonce):
+        self.blockNumber = blockNumber
         self.version = version
         self.prevBlockHash = prevBlockHash
         self.merkleRoot = merkleRoot

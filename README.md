@@ -37,5 +37,55 @@ Bitcoin is not without its flaws.
 5. Settlement time: Bitcoin blocks take ~10 minutes to validate. This is far too long for any irl use case. You wouldn’t wait for 10 minutes at a grocery store to have your payment validated. This has since been relatively well solved by other L1s and some Ethereum scaling solutions. 
 
 
+### 🧮 What is Hashing? 🧮
+
+SHA-256 is a type of one-way cryptographic function which takes in arbitrary data and generates a corresponding almost-unique 256-bit signature.
+
+Because of their one-way nature, they can be used to prove the authenticity of data without revealing any of that data’s underlying information.
+
+
+### 💸 How is a bitcoin transaction created? 💸
+
+Suppose Alice wants to pay Bob for a pizza. The slice costs $5 or 0.0001 BTC at the current BTC-USD exchange rate of $50,000. 
+
+Each transaction contains sets of "inputs" and "outputs". These are the debits and credits of the transaction respectively. The miner takes an implicit transaction fee which is the sum of inputs minus the sum of outputs. 
+
+Ownership of each input must be proven for the transaction to be valid. This is done cryptographically by __________
+
+Alice simply chooses the destination (Bob's wallet) and the amount (0.0001 BTC) and her wallet will handle the rest. 
+
+Well, how does her wallet construct the transaction?
+
+Most full-node bitcoin wallets contain an up-to-date log of the unspent balances for all users. This allows the wallet to quickly find valid inputs to construct transactions, and it allows the wallet to efficiently verify that incoming transactions are valid. This is quite a lot of data for the wallet to store so in practice lightweight-nodes store only the transaction data of their particular user. 
+
+If the correct data is not stored in the wallet, it's straight-forward to query the bitcoin network's API for all unspent transactons for a specified user. 
+
+The inputs and their proof-of-ownership along with the outputs form the bitcoin transaction. To understand how a transaction gets added to the ledger, check out my next thread. 
+
+You can also see more details on my github repo where I implement bitcoin's functionality in python. 
+
+
+### How does a transaction get added to the ledger?
+
+Here a transaction gets sent to the bitcoin network, the transcation gets added to a block, the block is mined, and once added to the blockchain the transaction becomes trusted and verifiable to all.
+
+A transaction gets propogated to all nodes in the bitcoin network through the following mechanism. When a node receives a valid transaction is hasn't seen before, it broadcasts it out to other nodes in the network. This this process called flooding, all nodes are rapidly made aware of the particular transaction. 
+
+Bob's wallet application will also receive the transaction within seconds, and he can verify himself that it's well formatted, includes his correct payment address, and uses inputs which have enough funds to pay him and the miner.
+
+
+### ⛏ How does bitcoin mining work? ⛏
+
+Bitcoin's proof-of-work system requires significant computational power to add a block to the chain but is extremely fast to validate. 
+
+Miners must validate all transactions before adding them to a block. If a transaction is invalid, other nodes will consider this miner's block to be invalid and the chain will fork and continue to grow without the miners invalid block. 
+
+Specifically, the computational puzzle that the miners compete to solve is hashing the header of the block and a random number called a nonce using SHA-256 until the value of the hash begins with a particular number of zeros. 
+
+The difficulty of the computational puzzle that miners must solve to append a new block is adjusted regularly to ensure on average it takes roughly 10 minutes to mine a block. This is done by changing the specified number of zeroes the SHA-256 hash must begin with. 
+
+Miners receive fees on each transaction as well as new bitcoin that's minted every block. Miners order transactions to add to their candidate blocks by a priority metric which is defined as the transaction fee multiplied by the age of the block divided by the size of the transaction. 
+
+
 ### My Questions
 1. Why is SHA256 computed twice when hashing?
